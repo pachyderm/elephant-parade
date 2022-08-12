@@ -1,26 +1,15 @@
-
-import { useLoaderData } from '@remix-run/react'
+import {Link, useLoaderData} from '@remix-run/react'
 import type {ActionFunction, LoaderFunction} from '@remix-run/node'
-import { Link } from '@remix-run/react'
-import { SignedIn, SignedOut, useAuth } from '@clerk/remix'
-import { getAuth } from '@clerk/remix/ssr.server'
-import {
-    Button,
-    Flex,
-    Heading,
-    Link as ChakraLink,
-    Stack,
-    Text,
-    useBreakpointValue,
-} from '@chakra-ui/react'
-import {json} from "@remix-run/node";
-
+import {json} from '@remix-run/node'
+import {SignedIn, SignedOut, useAuth} from '@clerk/remix'
+import {getAuth} from '@clerk/remix/ssr.server'
+import {Button, Flex, Heading, Stack, useBreakpointValue,} from '@chakra-ui/react'
 
 const dbErrorMessage =
     'Something is missing.<br/>Did you set up Supabase yet?<br/>You can find the <a href="https://github.com/clerkinc/remix-bossa-nova-stack#configuring-the-database" target="_blank">instructions in the README file</a>.'
 
-export const loader: LoaderFunction = async ({ request }) => {
-    const { userId } = await getAuth(request)
+export const loader: LoaderFunction = async ({request}) => {
+    const {userId} = await getAuth(request)
     if (!userId) return null
 
     return json({})
@@ -59,22 +48,6 @@ export default function Index() {
                     Elephant Parade
                 </Heading>
 
-                <Text size='lg'>
-                    Check the{' '}
-                    <ChakraLink
-                        href='https://github.com/clerkinc/remix-bossa-nova-stack/blob/main/README.md'
-                        isExternal
-                        textDecoration='underline'
-                        color='white'
-                        _visited={{
-                            color: 'white',
-                        }}
-                    >
-                        README
-                    </ChakraLink>{' '}
-                    file for instructions on how to get this project deployed.
-                </Text>
-
                 <SignedOut>
                     <Flex justify='center' gap={4}>
                         <Button as={Link} to='/sign-in' bg='gray.500'>
@@ -89,7 +62,6 @@ export default function Index() {
 
                 <SignedIn>
                     <Stack align='center' gap={4}>
-
                         <Button onClick={() => signOut()} bg='gray.500'>
                             Sign out
                         </Button>

@@ -6,12 +6,12 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model Person {
-  id               String             @id @default(uuid())
+  id               String             @id @default(uuid()) @map("_id")
   name             String
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
@@ -25,59 +25,110 @@ model Person {
   CustomerEngineer CustomerEngineer[]
 }
 
+enum IssueStatus {
+  TO_DO
+  BLOCKED
+  DONE
+  DEFERRED
+  WONT_DO
+  IN_REVIEW
+  IN_PROGRESS
+  NEEDS_CUSTOMER_INFO
+  DUPLICATE
+}
+
+enum IssueType {
+  BUG
+  EPIC
+  TASK
+  SUB_TASK
+  STORY
+  SPIKE
+  CUSTOMER_ESCALATION
+}
+
 model Issue {
-  id          String      @id @default(uuid())
-  name        String
-  description String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  uri         String
-  project     Project?    @relation(fields: [projectId], references: [id])
-  projectId   String?
+  id             String              @id @default(uuid()) @map("_id")
+  name           String
+  description    String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  uri            String
+  project        Project?            @relation(fields: [projectId], references: [id])
+  projectId      String?
   /// status is one of "TO_DO", "BLOCKED", "DONE", "DEFERRED", "WONT_DO", "IN_REVIEW", "IN_PROGRESS", "NEEDS_CUSTOMER_INFO", "DUPLICATE"
-  status      String      @default("TO_DO")
+  status         IssueStatus         @default(TO_DO)
   /// type is one of "BUG", "EPIC", "TASK", "SUB_TASK", "STORY", "SPIKE", "CUSTOMER_ESCALATION"
-  type        String      @default("BUG")
-  children    IssueLink[] @relation(name: "ChildrenIssues")
-  parents     IssueLink[] @relation(name: "ParentIssues")
-  reporter    Person?     @relation(name: "ReportedIssues", fields: [reporterId], references: [id])
-  reporterId  String?
-  assignee    Person?     @relation(name: "AssignedIssues", fields: [assigneeId], references: [id])
-  assigneeId  String?
-  customers   Customer[]  @relation(name: "CustomerIssues")
-  Release     Release?    @relation(fields: [releaseId], references: [id])
-  releaseId   String?
+  type           IssueType           @default(BUG)
+  children       IssueLink[]         @relation(name: "ChildrenIssues")
+  parents        IssueLink[]         @relation(name: "ParentIssues")
+  reporter       Person?             @relation(name: "ReportedIssues", fields: [reporterId], references: [id])
+  reporterId     String?
+  assignee       Person?             @relation(name: "AssignedIssues", fields: [assigneeId], references: [id])
+  assigneeId     String?
+  customerIssues CustomerIssueLink[] @relation(name: "CustomerIssueLinks")
+  Release        Release?            @relation(fields: [releaseId], references: [id])
+  releaseId      String?
+}
+
+model CustomerIssueLink {
+  id         String    @id @default(uuid()) @map("_id")
+  issue      Issue     @relation(name: "CustomerIssueLinks", fields: [issueId], references: [id])
+  issueId    String
+  customer   Customer? @relation(name: "LinkCustomerIssues", fields: [customerId], references: [id])
+  customerId String?
+}
+
+enum IssueLinkType {
+  STORY
+  BLOCKS
+  SUB_TASK
 }
 
 /// IssueLink is defined by the relationship from Child to Parent
 model IssueLink {
-  id       String  @id @default(uuid())
+  id       String        @id @default(uuid()) @map("_id")
   /// type is one of "STORY", "BLOCKS", "SUB_TASK"
-  type     String  @default("STORY")
-  parent   Issue   @relation(name: "ParentIssues", fields: [parentId], references: [id])
+  type     IssueLinkType @default(STORY)
+  parent   Issue         @relation(name: "ParentIssues", fields: [parentId], references: [id])
   parentId String
-  child    Issue?  @relation(name: "ChildrenIssues", fields: [childId], references: [id])
+  child    Issue?        @relation(name: "ChildrenIssues", fields: [childId], references: [id])
   childId  String?
 }
 
+enum ReleaseType {
+  MAJOR
+  MINOR
+  MAINTAINENCE
+}
+
+enum ReleaseStatus {
+  ALPHA
+  BETA
+  RC
+  GA
+  EOL
+  CUSTOM
+}
+
 model Release {
-  id        String   @id @default(uuid())
+  id        String        @id @default(uuid()) @map("_id")
   name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
   uri       String
   /// type is one of "MAJOR", "MINOR", "MAINTAINENCE"
-  type      String   @default("MAINTAINENCE")
+  type      ReleaseType   @default(MAINTAINENCE)
   /// status is one of "ALPHA", "BETA", "RC", "GA", "EOL", "CUSTOM"
-  status    String   @default("GA")
-  project   Project  @relation(name: "Releases", fields: [projectId], references: [id])
+  status    ReleaseStatus @default(GA)
+  project   Project       @relation(name: "Releases", fields: [projectId], references: [id])
   projectId String
   issues    Issue[]
 }
 
 model Project {
   /// internal project id
-  id          String    @id @default(uuid())
+  id          String    @id @default(uuid()) @map("_id")
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   name        String
@@ -92,7 +143,7 @@ model Project {
 }
 
 model Company {
-  id          String    @id @default(uuid())
+  id          String    @id @default(uuid()) @map("_id")
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   name        String
@@ -102,35 +153,35 @@ model Company {
 }
 
 model AccountExecutive {
-  id        String     @id @default(uuid())
+  id        String     @id @default(uuid()) @map("_id")
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   self      Person     @relation(fields: [personId], references: [id])
   customers Customer[]
-  personId  String
+  personId  String     @unique
 }
 
 model CustomerEngineer {
-  id        String     @id @default(uuid())
+  id        String     @id @default(uuid()) @map("_id")
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   self      Person     @relation(fields: [personId], references: [id])
   customers Customer[]
-  personId  String
+  personId  String     @unique
 }
 
 model Customer {
-  id                 String           @id @default(uuid())
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
-  company            Company          @relation(fields: [companyId], references: [id])
-  companyId          String           @unique
-  issues             Issue[]          @relation(name: "CustomerIssues")
-  accountExecutive   AccountExecutive @relation(fields: [accountExecutiveId], references: [id])
+  id                 String              @id @default(uuid()) @map("_id") @db.ObjectId
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  company            Company             @relation(fields: [companyId], references: [id])
+  companyId          String              @unique
+  customerIssues     CustomerIssueLink[] @relation(name: "LinkCustomerIssues")
+  accountExecutive   AccountExecutive    @relation(fields: [accountExecutiveId], references: [id])
   accountExecutiveId String
-  customerEngineer   CustomerEngineer @relation(fields: [customerEngineerId], references: [id])
-  customerSince      DateTime
-  nextRenewalDate    DateTime
+  customerEngineer   CustomerEngineer    @relation(fields: [customerEngineerId], references: [id])
+  customerSince      DateTime            @default(now())
+  nextRenewalDate    DateTime            @default(now())
   arr                Float
   customerEngineerId String
 }

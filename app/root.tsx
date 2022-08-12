@@ -24,17 +24,15 @@ function App() {
         <Document>
             <ChakraProvider theme={theme}>
                 <Box as='main' maxH='100vh' pos='relative'>
-                    <Outlet />
-
                     <Image
-                        src='images/logo.svg'
+                        src='/images/logo.svg'
                         alt='Elephant Parade'
                         boxSize='auto'
                         objectFit='cover'
-                        pos='absolute'
                         top={0}
                         zIndex={-1}
                     />
+                    <Outlet />
                 </Box>
             </ChakraProvider>
         </Document>

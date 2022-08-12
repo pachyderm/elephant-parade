@@ -113,18 +113,19 @@ enum ReleaseStatus {
 }
 
 model Release {
-  id        String        @id @default(uuid()) @map("_id")
-  name      String
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  uri       String
+  id          String        @id @default(uuid()) @map("_id")
+  name        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  uri         String
   /// type is one of "MAJOR", "MINOR", "MAINTAINENCE"
-  type      ReleaseType   @default(MAINTAINENCE)
+  type        ReleaseType   @default(MAINTAINENCE)
   /// status is one of "ALPHA", "BETA", "RC", "GA", "EOL", "CUSTOM"
-  status    ReleaseStatus @default(GA)
-  project   Project       @relation(name: "Releases", fields: [projectId], references: [id])
-  projectId String
-  issues    Issue[]
+  status      ReleaseStatus @default(GA)
+  project     Project       @relation(name: "Releases", fields: [projectId], references: [id])
+  projectId   String
+  issues      Issue[]
+  releaseDate DateTime?
 }
 
 model Project {

@@ -1,9 +1,11 @@
 import type { LoaderFunction } from '@remix-run/node'
 import type { ProjectsList } from 'services/projects.server'
 import { getProjectsList } from 'services/projects.server'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, Link as RemixLink } from '@remix-run/react'
 import {
     Heading,
+    LinkBox,
+    LinkOverlay,
     Stack,
     Table,
     TableContainer,
@@ -57,11 +59,16 @@ export default function ProjectsList() {
                     </Thead>
                     <Tbody>
                         {projectsList.map(project => (
-                            <Tr key={project.id}>
-                                <Td>{project.name}</Td>
+                            <LinkBox as={Tr} key={project.id}>
+                                <Td>
+                                    <LinkOverlay to={project.id} as={RemixLink}>
+                                        {' '}
+                                        {project.name}
+                                    </LinkOverlay>
+                                </Td>
                                 <Td>{project.projectKey}</Td>
                                 <Td>{project.lead?.name}</Td>
-                            </Tr>
+                            </LinkBox>
                         ))}
                     </Tbody>
                 </Table>

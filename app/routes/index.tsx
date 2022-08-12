@@ -11,9 +11,6 @@ import {
     useBreakpointValue,
 } from '@chakra-ui/react'
 
-const dbErrorMessage =
-    'Something is missing.<br/>Did you set up Supabase yet?<br/>You can find the <a href="https://github.com/clerkinc/remix-bossa-nova-stack#configuring-the-database" target="_blank">instructions in the README file</a>.'
-
 export const loader: LoaderFunction = async ({ request }) => {
     const { userId } = await getAuth(request)
     if (!userId) return null
@@ -22,11 +19,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-    const formData = await request.formData()
-    const { userId } = await getAuth(request)
-
-    const song = formData.get('add-song')
-
     return null
 }
 

@@ -3,7 +3,7 @@ import { prisma } from 'utils/prisma.server'
 export const getPeopleList = async ({
     companyId,
 }: { companyId?: string } = {}) => {
-    if (!!companyId) {
+    if (companyId) {
         return prisma.person.findMany({
             where: { company: { id: companyId } },
             select: {

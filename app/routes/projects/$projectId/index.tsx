@@ -1,6 +1,7 @@
 import type { ProjectDetails } from 'services/projects.server'
-import { Params, useCatch, useLoaderData } from '@remix-run/react'
-import { json, LoaderFunction } from '@remix-run/node'
+import { useCatch, useLoaderData } from '@remix-run/react'
+import type { LoaderFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import { getProjectDetails } from 'services/projects.server'
 import invariant from 'tiny-invariant'
 import {
@@ -16,7 +17,7 @@ import {
     Tr,
     useBreakpointValue,
 } from '@chakra-ui/react'
-import { useParams } from 'remix'
+import { useParams } from '@remix-run/react'
 
 type LoaderData = {
     projectDetails: ProjectDetails

@@ -1,6 +1,4 @@
 import type { LoaderFunction } from '@remix-run/node'
-import type { ProjectsList } from 'services/projects.server'
-import { getProjectsList } from 'services/projects.server'
 import { useLoaderData } from '@remix-run/react'
 import {
     Heading,
@@ -14,7 +12,8 @@ import {
     Tr,
     useBreakpointValue,
 } from '@chakra-ui/react'
-import { getIssuesList, IssuesList } from 'services/issues.server'
+import { getIssuesList } from 'services/issues.server'
+import type { IssuesList } from 'services/issues.server'
 
 type LoaderData = {
     issuesList: IssuesList

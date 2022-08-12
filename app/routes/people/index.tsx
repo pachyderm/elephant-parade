@@ -1,7 +1,7 @@
-import type {LoaderFunction} from '@remix-run/node'
-import type {PeopleList} from 'services/people.server'
-import {getPeopleList} from 'services/people.server'
-import {useLoaderData} from '@remix-run/react'
+import type { LoaderFunction } from '@remix-run/node'
+import type { PeopleList } from 'services/people.server'
+import { getPeopleList } from 'services/people.server'
+import { useLoaderData } from '@remix-run/react'
 import {
     Heading,
     Stack,
@@ -21,12 +21,12 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async () => {
     const peopleList = await getPeopleList()
-    return {peopleList}
+    return { peopleList }
 }
 
 export default function PeopleList() {
-    const {peopleList} = useLoaderData<LoaderData>()
-    const headingSize = useBreakpointValue({base: 'lg', sm: '2xl', lg: '4xl'})
+    const { peopleList } = useLoaderData<LoaderData>()
+    const headingSize = useBreakpointValue({ base: 'lg', sm: '2xl', lg: '4xl' })
     return (
         <Stack
             justify='center'
@@ -36,7 +36,7 @@ export default function PeopleList() {
             color='gray.900'
             gap={20}
         >
-            <Stack gap={4} p={{base: 4, md: 8}}>
+            <Stack gap={4} p={{ base: 4, md: 8 }}>
                 <Heading
                     as='h2'
                     size={headingSize}

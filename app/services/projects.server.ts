@@ -1,4 +1,4 @@
-import {prisma} from 'utils/prisma.server'
+import { prisma } from 'utils/prisma.server'
 
 export const getProjectsList = async () => {
     return prisma.project.findMany({
@@ -7,9 +7,9 @@ export const getProjectsList = async () => {
             name: true,
             projectKey: true,
             uri: true,
-            lead: {select: {name: true}},
+            lead: { select: { name: true } },
         },
-        orderBy: {name: 'asc'},
+        orderBy: { name: 'asc' },
     })
 }
 

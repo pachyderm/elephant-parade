@@ -68,32 +68,32 @@ const Document = withEmotionCache(
 
         return (
             <html lang='en'>
-            <head>
-                <title>Elephant Parade</title>
-                <meta charSet='utf-8' />
-                <meta
-                    name='viewport'
-                    content='width=device-width,initial-scale=1'
-                />
-                <Meta />
-                <Links />
-                {serverStyleData?.map(({key, ids, css}) => (
-                    <style
-                        key={key}
-                        data-emotion={`${key} ${ids.join(' ')}`}
-                        dangerouslySetInnerHTML={{__html: css}}
+                <head>
+                    <title>Elephant Parade</title>
+                    <meta charSet='utf-8' />
+                    <meta
+                        name='viewport'
+                        content='width=device-width,initial-scale=1'
                     />
-                ))}
-            </head>
+                    <Meta />
+                    <Links />
+                    {serverStyleData?.map(({ key, ids, css }) => (
+                        <style
+                            key={key}
+                            data-emotion={`${key} ${ids.join(' ')}`}
+                            dangerouslySetInnerHTML={{ __html: css }}
+                        />
+                    ))}
+                </head>
 
-            <body>
-            {children}
-            <ScrollRestoration />
-            <Scripts />
-            {process.env.NODE_ENV === 'development' ? (
-                <LiveReload />
-            ) : null}
-            </body>
+                <body>
+                    {children}
+                    <ScrollRestoration />
+                    <Scripts />
+                    {process.env.NODE_ENV === 'development' ? (
+                        <LiveReload />
+                    ) : null}
+                </body>
             </html>
         )
     },

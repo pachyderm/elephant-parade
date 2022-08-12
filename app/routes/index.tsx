@@ -1,8 +1,8 @@
-import {Link, useLoaderData} from '@remix-run/react'
-import type {ActionFunction, LoaderFunction} from '@remix-run/node'
-import {json} from '@remix-run/node'
-import {SignedIn, SignedOut, useAuth} from '@clerk/remix'
-import {getAuth} from '@clerk/remix/ssr.server'
+import { Link, useLoaderData } from '@remix-run/react'
+import type { ActionFunction, LoaderFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
+import { SignedIn, SignedOut, useAuth } from '@clerk/remix'
+import { getAuth } from '@clerk/remix/ssr.server'
 import {
     Button,
     Flex,
@@ -14,8 +14,8 @@ import {
 const dbErrorMessage =
     'Something is missing.<br/>Did you set up Supabase yet?<br/>You can find the <a href="https://github.com/clerkinc/remix-bossa-nova-stack#configuring-the-database" target="_blank">instructions in the README file</a>.'
 
-export const loader: LoaderFunction = async ({request}) => {
-    const {userId} = await getAuth(request)
+export const loader: LoaderFunction = async ({ request }) => {
+    const { userId } = await getAuth(request)
     if (!userId) return null
 
     return json({})

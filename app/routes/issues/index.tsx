@@ -1,7 +1,7 @@
-import type {LoaderFunction} from '@remix-run/node'
-import type {ProjectsList} from 'services/projects.server'
-import {getProjectsList} from 'services/projects.server'
-import {useLoaderData} from '@remix-run/react'
+import type { LoaderFunction } from '@remix-run/node'
+import type { ProjectsList } from 'services/projects.server'
+import { getProjectsList } from 'services/projects.server'
+import { useLoaderData } from '@remix-run/react'
 import {
     Heading,
     Stack,
@@ -14,7 +14,7 @@ import {
     Tr,
     useBreakpointValue,
 } from '@chakra-ui/react'
-import {getIssuesList, IssuesList} from 'services/issues.server'
+import { getIssuesList, IssuesList } from 'services/issues.server'
 
 type LoaderData = {
     issuesList: IssuesList
@@ -22,12 +22,12 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async () => {
     const issuesList = await getIssuesList()
-    return {issuesList}
+    return { issuesList }
 }
 
 export default function IssuesList() {
-    const {issuesList} = useLoaderData<LoaderData>()
-    const headingSize = useBreakpointValue({base: 'lg', sm: '2xl', lg: '4xl'})
+    const { issuesList } = useLoaderData<LoaderData>()
+    const headingSize = useBreakpointValue({ base: 'lg', sm: '2xl', lg: '4xl' })
     return (
         <Stack
             justify='center'
@@ -37,7 +37,7 @@ export default function IssuesList() {
             color='gray.900'
             gap={20}
         >
-            <Stack gap={4} p={{base: 4, md: 8}}>
+            <Stack gap={4} p={{ base: 4, md: 8 }}>
                 <Heading
                     as='h2'
                     size={headingSize}

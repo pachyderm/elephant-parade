@@ -23,7 +23,7 @@ function App() {
     return (
         <Document>
             <ChakraProvider theme={theme}>
-                <Box as='main' minH='100vh' pos='relative'>
+                <Box as='main' maxH='100vh' pos='relative'>
                     <Outlet />
 
                     <Image

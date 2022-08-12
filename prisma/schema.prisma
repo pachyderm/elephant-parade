@@ -45,6 +45,8 @@ model Issue {
   assignee    Person?     @relation(name: "AssignedIssues", fields: [assigneeId], references: [id])
   assigneeId  String?
   customers   Customer[]  @relation(name: "CustomerIssues")
+  Release     Release?    @relation(fields: [releaseId], references: [id])
+  releaseId   String?
 }
 
 /// IssueLink is defined by the relationship from Child to Parent
@@ -70,6 +72,7 @@ model Release {
   status    String   @default("GA")
   project   Project  @relation(name: "Releases", fields: [projectId], references: [id])
   projectId String
+  issues    Issue[]
 }
 
 model Project {

@@ -1,6 +1,6 @@
 import type {LoaderFunction} from '@remix-run/node'
-import type {PeopleList} from 'services/people.server'
-import {getPeopleList} from 'services/people.server'
+import type {ProjectsList} from 'services/projects.server'
+import {getProjectsList} from 'services/projects.server'
 import {useLoaderData} from '@remix-run/react'
 import {
     Heading,
@@ -14,18 +14,19 @@ import {
     Tr,
     useBreakpointValue,
 } from '@chakra-ui/react'
+import {getIssuesList, IssuesList} from 'services/issues.server'
 
 type LoaderData = {
-    peopleList: PeopleList
+    issuesList: IssuesList
 }
 
 export const loader: LoaderFunction = async () => {
-    const peopleList = await getPeopleList()
-    return {peopleList}
+    const issuesList = await getIssuesList()
+    return {issuesList}
 }
 
-export default function PeopleList() {
-    const {peopleList} = useLoaderData<LoaderData>()
+export default function IssuesList() {
+    const {issuesList} = useLoaderData<LoaderData>()
     const headingSize = useBreakpointValue({base: 'lg', sm: '2xl', lg: '4xl'})
     return (
         <Stack
@@ -43,7 +44,7 @@ export default function PeopleList() {
                     textTransform='uppercase'
                     color='green.400'
                 >
-                    People
+                    Issues
                 </Heading>
             </Stack>
             <TableContainer scrollBehavior={'auto'} overflowY={'auto'}>
@@ -51,16 +52,16 @@ export default function PeopleList() {
                     <Thead>
                         <Tr>
                             <Th>Name</Th>
-                            <Th>Email</Th>
-                            <Th>Company</Th>
+                            <Th>Status</Th>
+                            <Th>Project</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {peopleList.map(person => (
-                            <Tr key={person.id}>
-                                <Td>{person.name}</Td>
-                                <Td>{person.email}</Td>
-                                <Td>{person.company?.name}</Td>
+                        {issuesList.map(issue => (
+                            <Tr key={issue.id}>
+                                <Td>{issue.name}</Td>
+                                <Td>{issue.status}</Td>
+                                <Td>{issue.project?.name}</Td>
                             </Tr>
                         ))}
                     </Tbody>

@@ -2,7 +2,18 @@ import type {LoaderFunction} from '@remix-run/node'
 import type {ProjectsList} from 'services/projects.server'
 import {getProjectsList} from 'services/projects.server'
 import {useLoaderData} from '@remix-run/react'
-import {Heading, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useBreakpointValue,} from '@chakra-ui/react'
+import {
+    Heading,
+    Stack,
+    Table,
+    TableContainer,
+    Tbody,
+    Td,
+    Th,
+    Thead,
+    Tr,
+    useBreakpointValue,
+} from '@chakra-ui/react'
 
 type LoaderData = {
     projectsList: ProjectsList
@@ -35,7 +46,7 @@ export default function ProjectsList() {
                     Projects
                 </Heading>
             </Stack>
-            <TableContainer>
+            <TableContainer scrollBehavior={'auto'} overflowY={'auto'}>
                 <Table variant={'striped'} colorScheme={'linkedin'}>
                     <Thead>
                         <Tr>

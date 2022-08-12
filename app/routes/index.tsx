@@ -3,7 +3,13 @@ import type {ActionFunction, LoaderFunction} from '@remix-run/node'
 import {json} from '@remix-run/node'
 import {SignedIn, SignedOut, useAuth} from '@clerk/remix'
 import {getAuth} from '@clerk/remix/ssr.server'
-import {Button, Flex, Heading, Stack, useBreakpointValue,} from '@chakra-ui/react'
+import {
+    Button,
+    Flex,
+    Heading,
+    Stack,
+    useBreakpointValue,
+} from '@chakra-ui/react'
 
 const dbErrorMessage =
     'Something is missing.<br/>Did you set up Supabase yet?<br/>You can find the <a href="https://github.com/clerkinc/remix-bossa-nova-stack#configuring-the-database" target="_blank">instructions in the README file</a>.'

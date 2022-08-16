@@ -2,18 +2,8 @@ import type { LoaderFunction } from '@remix-run/node'
 import type { PeopleList } from 'services/people.server'
 import { getPeopleList } from 'services/people.server'
 import { useLoaderData } from '@remix-run/react'
-import {
-    Heading,
-    Stack,
-    Table,
-    TableContainer,
-    Tbody,
-    Td,
-    Th,
-    Thead,
-    Tr,
-    useBreakpointValue,
-} from '@chakra-ui/react'
+import { Heading, Stack, useBreakpointValue } from '@chakra-ui/react'
+import { LinkedTable } from 'components/LinkedTable'
 
 type LoaderData = {
     peopleList: PeopleList
@@ -24,9 +14,16 @@ export const loader: LoaderFunction = async () => {
     return { peopleList }
 }
 
-export default function PeopleList() {
+export default function PeopleListPage() {
     const { peopleList } = useLoaderData<LoaderData>()
     const headingSize = useBreakpointValue({ base: 'lg', sm: '2xl', lg: '4xl' })
+    const personHeadings = ['Name', 'Email', 'Company']
+    const people = peopleList.map(person => [
+        person.name,
+        person.email,
+        person.company?.name,
+    ])
+    const personUris = peopleList.map(person => `/people/${person.id}`)
     return (
         <Stack
             justify='center'
@@ -46,26 +43,11 @@ export default function PeopleList() {
                     People
                 </Heading>
             </Stack>
-            <TableContainer scrollBehavior={'auto'} overflowY={'auto'}>
-                <Table variant={'striped'} colorScheme={'linkedin'}>
-                    <Thead>
-                        <Tr>
-                            <Th>Name</Th>
-                            <Th>Email</Th>
-                            <Th>Company</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {peopleList.map(person => (
-                            <Tr key={person.id}>
-                                <Td>{person.name}</Td>
-                                <Td>{person.email}</Td>
-                                <Td>{person.company?.name}</Td>
-                            </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
-            </TableContainer>
+            <LinkedTable
+                headings={personHeadings}
+                rows={people}
+                uris={personUris}
+            />
         </Stack>
     )
 }

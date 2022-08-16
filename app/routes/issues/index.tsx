@@ -1,19 +1,9 @@
 import type { LoaderFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import {
-    Heading,
-    Stack,
-    Table,
-    TableContainer,
-    Tbody,
-    Td,
-    Th,
-    Thead,
-    Tr,
-    useBreakpointValue,
-} from '@chakra-ui/react'
-import { getIssuesList } from 'services/issues.server'
+import { Heading, Stack, useBreakpointValue } from '@chakra-ui/react'
 import type { IssuesList } from 'services/issues.server'
+import { getIssuesList } from 'services/issues.server'
+import { LinkedTable } from 'components/LinkedTable'
 
 type LoaderData = {
     issuesList: IssuesList
@@ -24,9 +14,16 @@ export const loader: LoaderFunction = async () => {
     return { issuesList }
 }
 
-export default function IssuesList() {
+export default function IssuesListPage() {
     const { issuesList } = useLoaderData<LoaderData>()
     const headingSize = useBreakpointValue({ base: 'lg', sm: '2xl', lg: '4xl' })
+    const issueHeadings = ['Name', 'Status', 'Project']
+    const issues = issuesList?.map(issue => [
+        issue.name,
+        issue.status.toString(),
+        issue.project?.name,
+    ])
+    const issueUris = issuesList.map(issue => `/issues/${issue.id}`)
     return (
         <Stack
             justify='center'
@@ -46,26 +43,11 @@ export default function IssuesList() {
                     Issues
                 </Heading>
             </Stack>
-            <TableContainer scrollBehavior={'auto'} overflowY={'auto'}>
-                <Table variant={'striped'} colorScheme={'linkedin'}>
-                    <Thead>
-                        <Tr>
-                            <Th>Name</Th>
-                            <Th>Status</Th>
-                            <Th>Project</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {issuesList.map(issue => (
-                            <Tr key={issue.id}>
-                                <Td>{issue.name}</Td>
-                                <Td>{issue.status}</Td>
-                                <Td>{issue.project?.name}</Td>
-                            </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
-            </TableContainer>
+            <LinkedTable
+                headings={issueHeadings}
+                rows={issues}
+                uris={issueUris}
+            />
         </Stack>
     )
 }

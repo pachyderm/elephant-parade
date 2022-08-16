@@ -4,7 +4,7 @@ export const getPeopleList = async ({
     companyId,
 }: { companyId?: string } = {}) => {
     if (companyId) {
-        return prisma.person.findMany({
+        return await prisma.person.findMany({
             where: { company: { id: companyId } },
             select: {
                 name: true,

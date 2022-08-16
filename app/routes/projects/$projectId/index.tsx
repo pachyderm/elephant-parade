@@ -1,23 +1,11 @@
 import type { ProjectDetails } from 'services/projects.server'
-import { useCatch, useLoaderData } from '@remix-run/react'
+import { getProjectDetails } from 'services/projects.server'
+import { useCatch, useLoaderData, useParams } from '@remix-run/react'
 import type { LoaderFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { getProjectDetails } from 'services/projects.server'
 import invariant from 'tiny-invariant'
-import {
-    Heading,
-    HStack,
-    Stack,
-    Table,
-    TableContainer,
-    Tbody,
-    Td,
-    Th,
-    Thead,
-    Tr,
-    useBreakpointValue,
-} from '@chakra-ui/react'
-import { useParams } from '@remix-run/react'
+import { Heading, HStack, Stack, useBreakpointValue } from '@chakra-ui/react'
+import { LinkedTable } from 'components/LinkedTable'
 
 type LoaderData = {
     projectDetails: ProjectDetails
@@ -37,11 +25,28 @@ export const loader: LoaderFunction = async ({ params }) => {
     return json(data)
 }
 
-export default function ProjectDetails() {
+export default function ProjectDetailsPage() {
     const data = useLoaderData<LoaderData>()
     const { projectDetails } = data
     const headingSize = useBreakpointValue({ base: 'lg', sm: '2xl', lg: '4xl' })
 
+    const issueHeadings = ['Name', 'Summary', 'Type', 'Status']
+    const issues = projectDetails?.issues.map(issue => [
+        issue.name,
+        issue.summary,
+        issue.type,
+        issue.status,
+    ])
+    const issueUris = projectDetails?.issues.map(issue => `/issues/${issue.id}`)
+    const releaseHeadings = ['Name', 'Type', 'Status']
+    const releases = projectDetails?.releases.map(release => [
+        release.name,
+        release.type,
+        release.status,
+    ])
+    const releaseUris = projectDetails?.releases.map(
+        release => `/releases/${release.id}`,
+    )
     return (
         <Stack
             justify='center'
@@ -65,66 +70,18 @@ export default function ProjectDetails() {
                 </Heading>
 
                 <HStack flex={1} gap={4} alignItems={'flex-start'}>
-                    <TableContainer
-                        scrollBehavior={'auto'}
-                        overflowY={'auto'}
-                        flex={2}
-                    >
-                        Issues
-                        <Table
-                            variant={'striped'}
-                            colorScheme={'linkedin'}
-                            size={'sm'}
-                        >
-                            <Thead>
-                                <Tr>
-                                    <Th>Name</Th>
-                                    <Th>Summary</Th>
-                                    <Th>Type</Th>
-                                    <Th>Status</Th>
-                                </Tr>
-                            </Thead>
-                            <Tbody>
-                                {projectDetails?.issues.map(issue => (
-                                    <Tr key={issue.id}>
-                                        <Td>{issue.name}</Td>
-                                        <Td>{issue.summary}</Td>
-                                        <Td>{issue.type}</Td>
-                                        <Td>{issue.status}</Td>
-                                    </Tr>
-                                ))}
-                            </Tbody>
-                        </Table>
-                    </TableContainer>
-                    <TableContainer
-                        scrollBehavior={'auto'}
-                        overflowY={'auto'}
-                        flex={1}
-                    >
-                        Releases
-                        <Table
-                            variant={'striped'}
-                            colorScheme={'linkedin'}
-                            size={'sm'}
-                        >
-                            <Thead>
-                                <Tr>
-                                    <Th>Name</Th>
-                                    <Th>Type</Th>
-                                    <Th>Status</Th>
-                                </Tr>
-                            </Thead>
-                            <Tbody>
-                                {projectDetails?.releases.map(release => (
-                                    <Tr key={release.id}>
-                                        <Td>{release.name}</Td>
-                                        <Td>{release.type}</Td>
-                                        <Td>{release.status}</Td>
-                                    </Tr>
-                                ))}
-                            </Tbody>
-                        </Table>
-                    </TableContainer>
+                    <LinkedTable
+                        name={'Issues'}
+                        headings={issueHeadings}
+                        rows={issues}
+                        uris={issueUris}
+                    />
+                    <LinkedTable
+                        name={'Releases'}
+                        headings={releaseHeadings}
+                        rows={releases}
+                        uris={releaseUris}
+                    />
                 </HStack>
             </Stack>
         </Stack>

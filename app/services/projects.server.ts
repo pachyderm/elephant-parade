@@ -1,7 +1,7 @@
 import { prisma } from 'utils/prisma.server'
 
 export const getProjectsList = async () => {
-    return prisma.project.findMany({
+    return await prisma.project.findMany({
         select: {
             id: true,
             name: true,

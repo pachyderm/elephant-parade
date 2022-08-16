@@ -1,21 +1,9 @@
 import type { LoaderFunction } from '@remix-run/node'
 import type { ProjectsList } from 'services/projects.server'
 import { getProjectsList } from 'services/projects.server'
-import { useLoaderData, Link as RemixLink } from '@remix-run/react'
-import {
-    Heading,
-    LinkBox,
-    LinkOverlay,
-    Stack,
-    Table,
-    TableContainer,
-    Tbody,
-    Td,
-    Th,
-    Thead,
-    Tr,
-    useBreakpointValue,
-} from '@chakra-ui/react'
+import { useLoaderData } from '@remix-run/react'
+import { Heading, Stack, useBreakpointValue } from '@chakra-ui/react'
+import { LinkedTable } from 'components/LinkedTable'
 
 type LoaderData = {
     projectsList: ProjectsList
@@ -26,9 +14,16 @@ export const loader: LoaderFunction = async () => {
     return { projectsList }
 }
 
-export default function ProjectsList() {
+export default function ProjectsListPage() {
     const { projectsList } = useLoaderData<LoaderData>()
     const headingSize = useBreakpointValue({ base: 'lg', sm: '2xl', lg: '4xl' })
+    const projectHeadings = ['Name', 'Key', 'Lead']
+    const projects = projectsList.map(project => [
+        project.name,
+        project.projectKey,
+        project.lead.name,
+    ])
+    const projectUris = projectsList.map(project => `/projects/${project.id}`)
     return (
         <Stack
             justify='center'
@@ -48,31 +43,11 @@ export default function ProjectsList() {
                     Projects
                 </Heading>
             </Stack>
-            <TableContainer scrollBehavior={'auto'} overflowY={'auto'}>
-                <Table variant={'striped'} colorScheme={'linkedin'}>
-                    <Thead>
-                        <Tr>
-                            <Th>Name</Th>
-                            <Th>Key</Th>
-                            <Th>Lead</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {projectsList.map(project => (
-                            <LinkBox as={Tr} key={project.id}>
-                                <Td>
-                                    <LinkOverlay to={project.id} as={RemixLink}>
-                                        {' '}
-                                        {project.name}
-                                    </LinkOverlay>
-                                </Td>
-                                <Td>{project.projectKey}</Td>
-                                <Td>{project.lead?.name}</Td>
-                            </LinkBox>
-                        ))}
-                    </Tbody>
-                </Table>
-            </TableContainer>
+            <LinkedTable
+                headings={projectHeadings}
+                rows={projects}
+                uris={projectUris}
+            />
         </Stack>
     )
 }

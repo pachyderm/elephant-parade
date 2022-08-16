@@ -18,7 +18,7 @@ model Person {
   reportedIssues   Issue[]            @relation(name: "ReportedIssues")
   assignedIssues   Issue[]            @relation(name: "AssignedIssues")
   Project          Project[]
-  email            String?
+  email            String             @default("")
   company          Company?           @relation(fields: [companyId], references: [id])
   companyId        String?
   AccountExecutive AccountExecutive[]
@@ -113,19 +113,20 @@ enum ReleaseStatus {
 }
 
 model Release {
-  id          String        @id @default(uuid()) @map("_id")
-  name        String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  uri         String
+  id           String        @id @default(uuid()) @map("_id")
+  name         String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  uri          String
   /// type is one of "MAJOR", "MINOR", "MAINTAINENCE"
-  type        ReleaseType   @default(MAINTAINENCE)
+  type         ReleaseType   @default(MAINTAINENCE)
   /// status is one of "ALPHA", "BETA", "RC", "GA", "EOL", "CUSTOM"
-  status      ReleaseStatus @default(GA)
-  project     Project       @relation(name: "Releases", fields: [projectId], references: [id])
-  projectId   String
-  issues      Issue[]
-  releaseDate DateTime?
+  status       ReleaseStatus @default(GA)
+  project      Project       @relation(name: "Releases", fields: [projectId], references: [id])
+  projectId    String
+  issues       Issue[]
+  releaseDate  DateTime?
+  dateReleased DateTime?
 }
 
 model Project {
@@ -172,18 +173,29 @@ model CustomerEngineer {
   personId  String     @unique
 }
 
+model Contract {
+  id        String    @id @default(uuid()) @map("_id")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  startDate DateTime  @default(now())
+  endDate   DateTime?
+  users     Int       @default(1)
+  value     Float
+  Customer Customer?
+}
+
 model Customer {
   id                 String              @id @default(uuid()) @map("_id")
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
-  company            Company             @relation(fields: [companyId], references: [id])
+  company            Company             @relation(fields: [companyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   companyId          String              @unique
   customerIssues     CustomerIssueLink[] @relation(name: "LinkCustomerIssues")
-  accountExecutive   AccountExecutive    @relation(fields: [accountExecutiveId], references: [id])
+  accountExecutive   AccountExecutive    @relation(fields: [accountExecutiveId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   accountExecutiveId String
-  customerEngineer   CustomerEngineer    @relation(fields: [customerEngineerId], references: [id])
+  customerEngineer   CustomerEngineer    @relation(fields: [customerEngineerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   customerSince      DateTime            @default(now())
-  nextRenewalDate    DateTime            @default(now())
-  arr                Float
   customerEngineerId String
+  contract           Contract            @relation(fields: [contractId], references: [id])
+  contractId         String              @unique
 }

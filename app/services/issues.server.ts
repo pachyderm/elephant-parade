@@ -1,7 +1,7 @@
 import { prisma } from 'utils/prisma.server'
 
 export const getIssuesList = async () => {
-    return prisma.issue.findMany({
+    return await prisma.issue.findMany({
         select: {
             id: true,
             name: true,
@@ -17,7 +17,7 @@ export const getIssuesListByProject = async ({
 }: {
     projectId: string
 }) => {
-    return prisma.issue.findMany({
+    return await prisma.issue.findMany({
         where: {
             project: {
                 id: projectId,

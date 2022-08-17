@@ -30,23 +30,16 @@ export default function ProjectDetailsPage() {
     const { projectDetails } = data
     const headingSize = useBreakpointValue({ base: 'lg', sm: '2xl', lg: '4xl' })
 
+    invariant(projectDetails?.issues, 'Project Issues Undefined')
+    invariant(projectDetails?.releases, 'Project Releases Undefined')
     const issueHeadings = ['Name', 'Summary', 'Type', 'Status']
-    const issues = projectDetails?.issues.map(issue => [
-        issue.name,
-        issue.summary,
-        issue.type,
-        issue.status,
-    ])
-    const issueUris = projectDetails?.issues.map(issue => `/issues/${issue.id}`)
+    const issues = projectDetails.issues
+    const issuesBaseUrl = '/issues'
+    const issueFields = [['name'], ['summary'], ['type'], ['status']]
     const releaseHeadings = ['Name', 'Type', 'Status']
-    const releases = projectDetails?.releases.map(release => [
-        release.name,
-        release.type,
-        release.status,
-    ])
-    const releaseUris = projectDetails?.releases.map(
-        release => `/releases/${release.id}`,
-    )
+    const releases = projectDetails.releases
+    const releaseFields = [['name'], ['type'], ['status']]
+    const releasesBaseUrl = '/releases'
     return (
         <Stack
             justify='center'
@@ -73,14 +66,16 @@ export default function ProjectDetailsPage() {
                     <LinkedTable
                         name={'Issues'}
                         headings={issueHeadings}
-                        rows={issues}
-                        uris={issueUris}
+                        collection={issues}
+                        fields={issueFields}
+                        baseUrl={issuesBaseUrl}
                     />
                     <LinkedTable
                         name={'Releases'}
                         headings={releaseHeadings}
-                        rows={releases}
-                        uris={releaseUris}
+                        collection={releases}
+                        baseUrl={releasesBaseUrl}
+                        fields={releaseFields}
                     />
                 </HStack>
             </Stack>

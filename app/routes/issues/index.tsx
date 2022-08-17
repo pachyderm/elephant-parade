@@ -1,29 +1,26 @@
 import type { LoaderFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { Heading, Stack, useBreakpointValue } from '@chakra-ui/react'
-import type { IssuesList } from 'services/issues.server'
-import { getIssuesList } from 'services/issues.server'
+import type { IssueList } from 'services/issues.server'
+import { getIssueList } from 'services/issues.server'
 import { LinkedTable } from 'components/LinkedTable'
 
 type LoaderData = {
-    issuesList: IssuesList
+    issueList: IssueList
 }
 
 export const loader: LoaderFunction = async () => {
-    const issuesList = await getIssuesList()
-    return { issuesList }
+    const issueList = await getIssueList()
+    return { issueList }
 }
 
 export default function IssuesListPage() {
-    const { issuesList } = useLoaderData<LoaderData>()
+    const { issueList } = useLoaderData<LoaderData>()
     const headingSize = useBreakpointValue({ base: 'lg', sm: '2xl', lg: '4xl' })
     const issueHeadings = ['Name', 'Status', 'Project']
-    const issues = issuesList?.map(issue => [
-        issue.name,
-        issue.status.toString(),
-        issue.project?.name,
-    ])
-    const issueUris = issuesList.map(issue => `/issues/${issue.id}`)
+    const baseUrl = '/issues'
+    const fields = [['name'], ['status'], ['project', 'name']]
+
     return (
         <Stack
             justify='center'
@@ -45,8 +42,9 @@ export default function IssuesListPage() {
             </Stack>
             <LinkedTable
                 headings={issueHeadings}
-                rows={issues}
-                uris={issueUris}
+                collection={issueList}
+                baseUrl={baseUrl}
+                fields={fields}
             />
         </Stack>
     )

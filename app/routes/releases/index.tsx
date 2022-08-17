@@ -1,25 +1,26 @@
 import type { LoaderFunction } from '@remix-run/node'
-import type { ProjectList } from 'services/projects.server'
-import { getProjectList } from 'services/projects.server'
+
 import { useLoaderData } from '@remix-run/react'
 import { Heading, Stack, useBreakpointValue } from '@chakra-ui/react'
 import { LinkedTable } from 'components/LinkedTable'
+import type { ReleaseList } from 'services/releases.server'
+import { getReleaseList } from 'services/releases.server'
 
 type LoaderData = {
-    projectsList: ProjectList
+    releaseList: ReleaseList
 }
 
 export const loader: LoaderFunction = async () => {
-    const projectsList = await getProjectList()
-    return { projectsList }
+    const releaseList = await getReleaseList()
+    return { releaseList }
 }
 
-export default function ProjectListPage() {
-    const { projectsList } = useLoaderData<LoaderData>()
+export default function ReleaseListPage() {
+    const { releaseList } = useLoaderData<LoaderData>()
     const headingSize = useBreakpointValue({ base: 'lg', sm: '2xl', lg: '4xl' })
-    const projectHeadings = ['Name', 'Key', 'Lead']
-    const baseUrl = '/projects'
-    const fields = [['name'], ['projectKey'], ['lead', 'name']]
+    const headings = ['Name', 'Type', 'Project']
+    const baseUrl = '/releases'
+    const fields = [['name'], ['type'], ['project', 'name']]
     return (
         <Stack
             justify='center'
@@ -36,12 +37,12 @@ export default function ProjectListPage() {
                     textTransform='uppercase'
                     color='green.400'
                 >
-                    Projects
+                    Releases
                 </Heading>
             </Stack>
             <LinkedTable
-                headings={projectHeadings}
-                collection={projectsList}
+                headings={headings}
+                collection={releaseList}
                 baseUrl={baseUrl}
                 fields={fields}
             />

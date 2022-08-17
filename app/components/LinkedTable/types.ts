@@ -1,8 +1,10 @@
 import type { ComponentPropsWithoutRef } from 'react'
+import type { Identifiable } from 'components/types'
 
 export type Props = ComponentPropsWithoutRef<any> & {
     name?: string
     headings: string[]
-    rows: (string | null | undefined)[][] | undefined
-    uris: string[] | undefined
+    collection: Identifiable[]
+    fields: string[][]
+    baseUrl: string
 }

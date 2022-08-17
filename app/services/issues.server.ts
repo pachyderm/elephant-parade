@@ -1,6 +1,6 @@
 import { prisma } from 'utils/prisma.server'
 
-export const getIssuesList = async () => {
+export const getIssueList = async () => {
     return await prisma.issue.findMany({
         select: {
             id: true,
@@ -33,7 +33,7 @@ export const getIssuesListByProject = async ({
     })
 }
 
-export type IssuesList = Awaited<ReturnType<typeof getIssuesList>>
+export type IssueList = Awaited<ReturnType<typeof getIssueList>>
 
 export type IssuesListByProject = Awaited<
     ReturnType<typeof getIssuesListByProject>

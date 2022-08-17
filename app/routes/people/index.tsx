@@ -18,12 +18,8 @@ export default function PeopleListPage() {
     const { peopleList } = useLoaderData<LoaderData>()
     const headingSize = useBreakpointValue({ base: 'lg', sm: '2xl', lg: '4xl' })
     const personHeadings = ['Name', 'Email', 'Company']
-    const people = peopleList.map(person => [
-        person.name,
-        person.email,
-        person.company?.name,
-    ])
-    const personUris = peopleList.map(person => `/people/${person.id}`)
+    const baseUrl = '/people'
+    const fields = [['name'], ['email'], ['company', 'name']]
     return (
         <Stack
             justify='center'
@@ -45,8 +41,9 @@ export default function PeopleListPage() {
             </Stack>
             <LinkedTable
                 headings={personHeadings}
-                rows={people}
-                uris={personUris}
+                collection={peopleList}
+                fields={fields}
+                baseUrl={baseUrl}
             />
         </Stack>
     )

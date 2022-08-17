@@ -13,9 +13,19 @@ import React from 'react'
 import type { Props } from './types'
 import { Link as RemixLink } from '@remix-run/react/dist/components'
 import invariant from 'tiny-invariant'
+import get from 'lodash.get'
 
-function LinkedTableComponent({ name, headings, rows, uris }: Props) {
-    invariant(rows?.length === uris?.length, 'Rows and URIs need to match')
+function LinkedTableComponent({
+    name,
+    headings,
+    collection,
+    fields,
+    baseUrl,
+}: Props) {
+    const urls = collection.map(item => `${baseUrl}/${item.id}`)
+    const rows = collection.map(item =>
+        fields.map(field => get(item, field, '')),
+    )
     return (
         <TableContainer scrollBehavior={'initial'} overflowY={'auto'} flex={2}>
             {name}
@@ -28,19 +38,19 @@ function LinkedTableComponent({ name, headings, rows, uris }: Props) {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {rows?.map((row, rowIndex) => (
+                    {rows.map((row, rowIndex) => (
                         <LinkBox as={Tr} key={rowIndex}>
                             {row.map((item, itemIndex) => {
-                                invariant(uris, 'URI Array Undefined')
-                                const uri = uris[rowIndex]
-                                    ? uris[rowIndex]
+                                invariant(urls, 'URI Array Undefined')
+                                const url = urls[rowIndex]
+                                    ? urls[rowIndex]
                                     : '.'
                                 const first = itemIndex == 0
                                 return (
                                     <Td key={itemIndex}>
                                         {first ? (
                                             <LinkOverlay
-                                                to={`${uri}`}
+                                                to={`${url}`}
                                                 as={RemixLink}
                                             >
                                                 {item ? item : ''}

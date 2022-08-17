@@ -7,8 +7,11 @@ export const getReleaseList = async () => {
             name: true,
             project: { select: { name: true } },
             type: true,
+            supportStatus: true,
+            releaseStatus: true,
+            dateReleased: true,
         },
-        orderBy: { name: 'asc' },
+        orderBy: { name: 'desc' },
     })
 }
 

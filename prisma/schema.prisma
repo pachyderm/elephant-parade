@@ -103,7 +103,7 @@ enum ReleaseType {
   MAINTAINENCE
 }
 
-enum ReleaseStatus {
+enum SupportStatus {
   ALPHA
   BETA
   RC
@@ -112,21 +112,28 @@ enum ReleaseStatus {
   CUSTOM
 }
 
+enum ReleaseStatus {
+  UNRELEASED
+  RELEASED
+  ARCHIVED
+}
+
 model Release {
-  id           String        @id @default(uuid()) @map("_id")
-  name         String
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  uri          String
+  id                 String        @id @default(uuid()) @map("_id")
+  name               String
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  uri                String
   /// type is one of "MAJOR", "MINOR", "MAINTAINENCE"
-  type         ReleaseType   @default(MAINTAINENCE)
+  type               ReleaseType   @default(MAINTAINENCE)
   /// status is one of "ALPHA", "BETA", "RC", "GA", "EOL", "CUSTOM"
-  status       ReleaseStatus @default(GA)
-  project      Project       @relation(name: "Releases", fields: [projectId], references: [id])
-  projectId    String
-  issues       Issue[]
-  releaseDate  DateTime?
-  dateReleased DateTime?
+  supportStatus      SupportStatus @default(GA)
+  releaseStatus      ReleaseStatus @default(UNRELEASED)
+  project            Project       @relation(name: "Releases", fields: [projectId], references: [id])
+  projectId          String
+  issues             Issue[]
+  plannedReleaseDate DateTime?
+  dateReleased       DateTime?
 }
 
 model Project {
@@ -181,7 +188,7 @@ model Contract {
   endDate   DateTime?
   users     Int       @default(1)
   value     Float
-  Customer Customer?
+  Customer  Customer?
 }
 
 model Customer {

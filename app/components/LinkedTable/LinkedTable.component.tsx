@@ -1,19 +1,15 @@
 import {
     LinkBox,
-    LinkOverlay,
     Table,
     TableContainer,
     Tbody,
-    Td,
     Th,
     Thead,
     Tr,
 } from '@chakra-ui/react'
 import React from 'react'
 import type { Props } from './types'
-import { Link as RemixLink } from '@remix-run/react/dist/components'
-import invariant from 'tiny-invariant'
-import get from 'lodash.get'
+import { TableField } from 'components/TableField'
 
 function LinkedTableComponent({
     name,
@@ -23,9 +19,14 @@ function LinkedTableComponent({
     baseUrl,
 }: Props) {
     const urls = collection.map(item => `${baseUrl}/${item.id}`)
-    const rows = collection.map(item =>
-        fields.map(field => get(item, field, '')),
-    )
+    const rows = collection.map((row, index) => {
+        const url = urls[index]
+        return fields.map((field, index) => {
+            const first = index == 0
+            const item = row
+            return { first, url, field, item }
+        })
+    })
     return (
         <TableContainer scrollBehavior={'initial'} overflowY={'auto'} flex={2}>
             {name}
@@ -41,27 +42,7 @@ function LinkedTableComponent({
                     {rows.map((row, rowIndex) => (
                         <LinkBox as={Tr} key={rowIndex}>
                             {row.map((item, itemIndex) => {
-                                invariant(urls, 'URI Array Undefined')
-                                const url = urls[rowIndex]
-                                    ? urls[rowIndex]
-                                    : '.'
-                                const first = itemIndex == 0
-                                return (
-                                    <Td key={itemIndex}>
-                                        {first ? (
-                                            <LinkOverlay
-                                                to={`${url}`}
-                                                as={RemixLink}
-                                            >
-                                                {item ? item : ''}
-                                            </LinkOverlay>
-                                        ) : item ? (
-                                            item
-                                        ) : (
-                                            ''
-                                        )}
-                                    </Td>
-                                )
+                                return <TableField {...item} key={itemIndex} />
                             })}
                         </LinkBox>
                     ))}

@@ -1,29 +1,34 @@
 import type { LoaderFunction } from '@remix-run/node'
-import type { PeopleList } from 'services/people.server'
-import { getPeopleList } from 'services/people.server'
+
 import { useLoaderData } from '@remix-run/react'
 import { Heading, Stack, useBreakpointValue } from '@chakra-ui/react'
 import { LinkedTable } from 'components/LinkedTable'
+import { getCustomerList } from 'services/customers.server'
+import type { CustomerList } from 'services/customers.server'
 import type { ComponentField } from 'components/types'
 
 type LoaderData = {
-    peopleList: PeopleList
+    customerList: CustomerList
 }
 
 export const loader: LoaderFunction = async () => {
-    const peopleList = await getPeopleList()
-    return { peopleList }
+    const customerList = await getCustomerList()
+    return { customerList }
 }
 
-export default function PeopleListPage() {
-    const { peopleList } = useLoaderData<LoaderData>()
+export default function CustomerListPage() {
+    const { customerList } = useLoaderData<LoaderData>()
+
     const headingSize = useBreakpointValue({ base: 'lg', sm: '2xl', lg: '4xl' })
-    const personHeadings = ['Name', 'Email', 'Company']
-    const baseUrl = '/people'
+    const headings = ['Name', 'AE', 'CE', 'Renewal Date', 'Users']
+    const baseUrl = '/customers'
+
     const fields: ComponentField[] = [
-        { fieldName: ['name'] },
-        { fieldName: ['email'] },
         { fieldName: ['company', 'name'] },
+        { fieldName: ['accountExecutive', 'self', 'name'] },
+        { fieldName: ['customerEngineer', 'self', 'name'] },
+        { fieldName: ['contract', 'endDate'] },
+        { fieldName: ['contract', 'users'] },
     ]
     return (
         <Stack
@@ -41,14 +46,14 @@ export default function PeopleListPage() {
                     textTransform='uppercase'
                     color='green.400'
                 >
-                    People
+                    Customers
                 </Heading>
             </Stack>
             <LinkedTable
-                headings={personHeadings}
-                collection={peopleList}
-                fields={fields}
+                headings={headings}
+                collection={customerList}
                 baseUrl={baseUrl}
+                fields={fields}
             />
         </Stack>
     )

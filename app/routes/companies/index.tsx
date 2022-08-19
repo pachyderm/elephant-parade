@@ -5,6 +5,7 @@ import { Heading, Stack, useBreakpointValue } from '@chakra-ui/react'
 import { LinkedTable } from 'components/LinkedTable'
 import type { CompanyList } from 'services/companies.server'
 import { getCompanyList } from 'services/companies.server'
+import type { ComponentField } from 'components/types'
 
 type LoaderData = {
     companyList: CompanyList
@@ -21,7 +22,10 @@ export default function CompanyListPage() {
     const headingSize = useBreakpointValue({ base: 'lg', sm: '2xl', lg: '4xl' })
     const headings = ['Name', 'Employees']
     const baseUrl = '/companies'
-    const fields = [['name'], ['employees', 'length']]
+    const fields: ComponentField[] = [
+        { fieldName: ['name'] },
+        { fieldName: ['employees', 'length'] },
+    ]
     return (
         <Stack
             justify='center'

@@ -45,7 +45,8 @@ export const getProjectDetails = async ({
                 select: {
                     id: true,
                     name: true,
-                    status: true,
+                    releaseStatus: true,
+                    supportStatus: true,
                     type: true,
                 },
                 orderBy: {

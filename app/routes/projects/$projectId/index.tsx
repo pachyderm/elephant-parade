@@ -6,6 +6,7 @@ import { json } from '@remix-run/node'
 import invariant from 'tiny-invariant'
 import { Heading, HStack, Stack, useBreakpointValue } from '@chakra-ui/react'
 import { LinkedTable } from 'components/LinkedTable'
+import type { ComponentField } from 'components/types'
 
 type LoaderData = {
     projectDetails: ProjectDetails
@@ -35,10 +36,20 @@ export default function ProjectDetailsPage() {
     const issueHeadings = ['Name', 'Summary', 'Type', 'Status']
     const issues = projectDetails.issues
     const issuesBaseUrl = '/issues'
-    const issueFields = [['name'], ['summary'], ['type'], ['status']]
-    const releaseHeadings = ['Name', 'Type', 'Status']
+    const issueFields: ComponentField[] = [
+        { fieldName: ['name'] },
+        { fieldName: ['summary'] },
+        { fieldName: ['type'] },
+        { fieldName: ['status'] },
+    ]
+    const releaseHeadings = ['Name', 'Type', 'Status', 'Support']
     const releases = projectDetails.releases
-    const releaseFields = [['name'], ['type'], ['status']]
+    const releaseFields: ComponentField[] = [
+        { fieldName: ['name'] },
+        { fieldName: ['type'] },
+        { fieldName: ['releaseStatus'] },
+        { fieldName: ['supportStatus'] },
+    ]
     const releasesBaseUrl = '/releases'
     return (
         <Stack

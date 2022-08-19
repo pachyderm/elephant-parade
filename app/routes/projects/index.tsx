@@ -4,6 +4,7 @@ import { getProjectList } from 'services/projects.server'
 import { useLoaderData } from '@remix-run/react'
 import { Heading, Stack, useBreakpointValue } from '@chakra-ui/react'
 import { LinkedTable } from 'components/LinkedTable'
+import type { ComponentField } from 'components/types'
 
 type LoaderData = {
     projectsList: ProjectList
@@ -19,7 +20,11 @@ export default function ProjectListPage() {
     const headingSize = useBreakpointValue({ base: 'lg', sm: '2xl', lg: '4xl' })
     const projectHeadings = ['Name', 'Key', 'Lead']
     const baseUrl = '/projects'
-    const fields = [['name'], ['projectKey'], ['lead', 'name']]
+    const fields: ComponentField[] = [
+        { fieldName: ['name'] },
+        { fieldName: ['projectKey'] },
+        { fieldName: ['lead', 'name'] },
+    ]
     return (
         <Stack
             justify='center'

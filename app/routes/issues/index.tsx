@@ -4,6 +4,7 @@ import { Heading, Stack, useBreakpointValue } from '@chakra-ui/react'
 import type { IssueList } from 'services/issues.server'
 import { getIssueList } from 'services/issues.server'
 import { LinkedTable } from 'components/LinkedTable'
+import type { ComponentField } from 'components/types'
 
 type LoaderData = {
     issueList: IssueList
@@ -19,7 +20,11 @@ export default function IssuesListPage() {
     const headingSize = useBreakpointValue({ base: 'lg', sm: '2xl', lg: '4xl' })
     const issueHeadings = ['Name', 'Status', 'Project']
     const baseUrl = '/issues'
-    const fields = [['name'], ['status'], ['project', 'name']]
+    const fields: ComponentField[] = [
+        { fieldName: ['name'] },
+        { fieldName: ['status'] },
+        { fieldName: ['project', 'name'] },
+    ]
 
     return (
         <Stack
